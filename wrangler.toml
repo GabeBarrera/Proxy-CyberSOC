@@ -10,7 +10,8 @@ workers_dev = true
 [vars]
 # Comma-separated list of site origins allowed to call this worker.
 # Use the exact origin the site is opened from: scheme + host (+ port),
-# no path, no trailing slash. A GitHub Pages project site at
-# https://gabebarrera.github.io/CyberSOC/ has the origin https://gabebarrera.github.io
+# no path, no trailing slash. The live site is https://soc.gabebarrera.dev
+# (GitHub Pages custom domain); a project site at
+# https://gabebarrera.github.io/Proxy-CyberSOC/ has the origin https://gabebarrera.github.io
 # This file is the source of truth: every deploy replaces variables set in the dashboard.
-ALLOWED_ORIGINS = "https://gabebarrera.github.io,http://localhost:8080,http://127.0.0.1:8080"
+ALLOWED_ORIGINS = "https://soc.gabebarrera.dev,https://gabebarrera.github.io,http://localhost:8080,http://127.0.0.1:8080"
