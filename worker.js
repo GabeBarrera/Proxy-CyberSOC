@@ -1,5 +1,5 @@
 /* ===================================================================
-   CyberSOC — Cloudflare Worker (read-only feed proxy)
+   proxy-cybersoc — CyberSOC feed proxy (Cloudflare Worker, read-only)
 
    Replaces the old local Node server. It holds no secrets and writes
    nothing: every route is a GET that fetches public data on the
@@ -58,7 +58,7 @@ async function cached(key, ttlMs, producer) {
 
 /* ---------- RSS / Atom proxy ---------- */
 const RSS_MAX_BYTES = 2 * 1024 * 1024;
-const RSS_UA = "CyberSOC-Worker/2.0 (+rss)";
+const RSS_UA = "proxy-cybersoc/2.0 (+rss)";
 /* Refuse anything that is not a public http(s) host. Workers cannot reach a
    private network anyway; this just keeps the proxy from being pointed at
    loopback / link-local / RFC1918 literals or single-label internal names. */
@@ -141,7 +141,7 @@ function geoForCountry(cc, seed) {
 
 async function fetchJSON(url, opts) {
   const r = await fetch(url, Object.assign({
-    headers: { "User-Agent": "CyberSOC-Worker/2.0", "Accept": "application/json" }
+    headers: { "User-Agent": "proxy-cybersoc/2.0", "Accept": "application/json" }
   }, opts || {}));
   if (!r.ok) throw new Error("http " + r.status);
   return r.json();
@@ -348,7 +348,7 @@ async function geoEnrich(items) {
     try {
       const r = await fetch("http://ip-api.com/batch?fields=status,countryCode,city,lat,lon,query", {
         method: "POST",
-        headers: { "User-Agent": "CyberSOC-Worker/2.0", "Content-Type": "application/json" },
+        headers: { "User-Agent": "proxy-cybersoc/2.0", "Content-Type": "application/json" },
         body: JSON.stringify(ips)
       });
       if (r.ok) {
@@ -523,7 +523,7 @@ async function ipIntel(raw) {
   try {
     const r = await fetch("http://ip-api.com/json/" + encodeURIComponent(q) +
       "?fields=status,message,country,countryCode,regionName,city,lat,lon,timezone,isp,org,as,asname,reverse,query",
-      { headers: { "User-Agent": "CyberSOC-Worker/2.0" } });
+      { headers: { "User-Agent": "proxy-cybersoc/2.0" } });
     if (r.ok) {
       const j = await r.json();
       if (j && j.status === "success") {
@@ -549,7 +549,7 @@ export default {
     if (request.method !== "GET") return json({ error: "method not allowed" }, 405, origin);
 
     try {
-      if (p === "/api/health") return json({ ok: true, service: "CyberSOC worker", ts: new Date().toISOString() }, 200, origin);
+      if (p === "/api/health") return json({ ok: true, service: "proxy-cybersoc", ts: new Date().toISOString() }, 200, origin);
 
       if (p === "/api/rss") {
         const xml = await proxyFeed(url.searchParams.get("url") || "");

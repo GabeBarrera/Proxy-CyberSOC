@@ -1,11 +1,16 @@
-# CyberSOC feed proxy — deploy with:  npx wrangler deploy
-name = "cybersoc-feeds"
+# proxy-cybersoc — CyberSOC feed proxy (Cloudflare Worker)
+# Deployed automatically by Cloudflare Workers Builds when this repo is pushed,
+# or by hand with:  npx wrangler deploy
+# "name" must match the Worker's name in the Cloudflare dashboard.
+name = "proxy-cybersoc"
 main = "worker.js"
 compatibility_date = "2024-11-01"
 workers_dev = true
 
 [vars]
 # Comma-separated list of site origins allowed to call this worker.
-# Use the exact origin of wherever index.html is served (scheme + host + port,
-# no trailing slash). "*" allows any site — avoid it outside of testing.
-ALLOWED_ORIGINS = "https://infosec-database.web.app,https://infosec-database.firebaseapp.com,http://localhost:5000,http://localhost:8080,http://127.0.0.1:8080"
+# Use the exact origin the site is opened from: scheme + host (+ port),
+# no path, no trailing slash. A GitHub Pages project site at
+# https://gabebarrera.github.io/CyberSOC/ has the origin https://gabebarrera.github.io
+# This file is the source of truth: every deploy replaces variables set in the dashboard.
+ALLOWED_ORIGINS = "https://gabebarrera.github.io,http://localhost:8080,http://127.0.0.1:8080"
